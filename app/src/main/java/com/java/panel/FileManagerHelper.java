@@ -8,11 +8,11 @@ import java.util.zip.ZipOutputStream;
 
 public class FileManagerHelper {
     public static String listDirectory(String path) {
-        StringBuilder sb = new StringBuilder("📁 Dizin İçeriği [" + path + "]:\n\n");
+        StringBuilder sb = new StringBuilder("📁 Directory Contents [" + path + "]:\n\n");
         try {
             File dir = new File(path);
             if (!dir.exists()) {
-                return "❌ Dizin bulunamadı: " + path;
+                return "❌ Directory not found: " + path;
             }
             File[] files = dir.listFiles();
             if (files != null) {
@@ -21,16 +21,16 @@ public class FileManagerHelper {
                     sb.append(type).append(" ").append(f.getName()).append("\n");
                 }
             } else {
-                sb.append("⚠️ Dizin boş veya erişim kısıtlı.");
+                sb.append("⚠️ Directory is empty or access is restricted.");
             }
         } catch (Exception e) {
-            return "❌ Dizin listelenemedi: " + e.getMessage();
+            return "❌ Failed to list directory: " + e.getMessage();
         }
         return sb.toString();
     }
 
     public static String findFile(File dir, String name) {
-        StringBuilder sb = new StringBuilder("🔍 Arama Sonuçları:\n\n");
+        StringBuilder sb = new StringBuilder("🔍 Search Results:\n\n");
         try {
             File[] files = dir.listFiles();
             if (files != null) {
@@ -39,7 +39,6 @@ public class FileManagerHelper {
                         if (f.getName().toLowerCase().contains(name.toLowerCase())) {
                             sb.append("📁 ").append(f.getAbsolutePath()).append("\n");
                         }
-                        // Derinlemesine arama için alt klasörleri de tarayabilir
                     } else {
                         if (f.getName().toLowerCase().contains(name.toLowerCase())) {
                             sb.append("📄 ").append(f.getAbsolutePath()).append("\n");
@@ -48,7 +47,7 @@ public class FileManagerHelper {
                 }
             }
         } catch (Exception e) {
-            return "❌ Dosya arama hatası: " + e.getMessage();
+            return "❌ File search error: " + e.getMessage();
         }
         return sb.toString();
     }
@@ -56,7 +55,7 @@ public class FileManagerHelper {
     public static String zipFolder(String srcPath, String zipPath) {
         try {
             File srcFile = new File(srcPath);
-            if (!srcFile.exists()) return "❌ Sıkıştırılacak kaynak bulunamadı.";
+            if (!srcFile.exists()) return "❌ Source to zip not found.";
 
             FileOutputStream fos = new FileOutputStream(zipPath);
             ZipOutputStream zos = new ZipOutputStream(fos);
@@ -77,9 +76,9 @@ public class FileManagerHelper {
             
             zos.close();
             fos.close();
-            return "📦 Başarıyla sıkıştırıldı -> " + zipPath;
+            return "📦 Successfully zipped -> " + zipPath;
         } catch (Exception e) {
-            return "❌ Sıkıştırma hatası: " + e.getMessage();
+            return "❌ Compression error: " + e.getMessage();
         }
     }
 
