@@ -26,6 +26,8 @@
   ➤ /apk <path> - Installs the specified APK file
   ➤ /open_site <url> - Opens a website in the browser
   ➤ /send_intent <action> [data] [pkg] - Sends a custom Intent
+  ➤ /toast <message> - Sends a custom Toast Message
+
 
   📍 MEDIA AND AUTOMATION
   ➤ /locate - Gets instant GPS/Network location and map link
