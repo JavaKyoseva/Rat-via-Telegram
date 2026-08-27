@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Forsaken</string>
+    <string name="accessibility_description">Forsaken Management Service</string>
 </resources>

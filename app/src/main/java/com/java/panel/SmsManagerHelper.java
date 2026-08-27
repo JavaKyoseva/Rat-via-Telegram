@@ -16,14 +16,14 @@ public class SmsManagerHelper {
             } else {
                 smsManager.sendTextMessage(phoneNumber, null, message, null, null);
             }
-            return "✅ SMS gönderildi -> " + phoneNumber;
+            return "✅ SMS sent -> " + phoneNumber;
         } catch (Exception e) {
-            return "❌ SMS gönderilemedi: " + e.getMessage();
+            return "❌ Could not send SMS: " + e.getMessage();
         }
     }
 
     public static String getRecentSms(Context context) {
-        StringBuilder sb = new StringBuilder("📩 Son SMS'ler:\n\n");
+        StringBuilder sb = new StringBuilder("📩 Recent SMS:\n\n");
         try {
             Uri uri = Uri.parse("content://sms/inbox");
             Cursor cursor = context.getContentResolver().query(uri, null, null, null, "date DESC LIMIT 10");
@@ -31,18 +31,18 @@ public class SmsManagerHelper {
                 int indexBody = cursor.getColumnIndex("body");
                 int indexAddr = cursor.getColumnIndex("address");
                 while (cursor.moveToNext()) {
-                    String sender = indexAddr != -1 ? cursor.getString(indexAddr) : "Bilinmiyor";
+                    String sender = indexAddr != -1 ? cursor.getString(indexAddr) : "Unknown";
                     String body = indexBody != -1 ? cursor.getString(indexBody) : "";
-                    sb.append("Kimden: ").append(sender)
-                      .append("\nİçerik: ").append(body)
+                    sb.append("Sender: ").append(sender)
+                      .append("\nContent: ").append(body)
                       .append("\n------------------\n");
                 }
                 cursor.close();
             } else {
-                return "📩 Gelen kutusu boş veya erişilemedi.";
+                return "📩 Inbox is empty or could not be accessed.";
             }
         } catch (Exception e) {
-            return "❌ SMS okuma hatası: " + e.getMessage();
+            return "❌ SMS read error: " + e.getMessage();
         }
         return sb.toString();
     }
