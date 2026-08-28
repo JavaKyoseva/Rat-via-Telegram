@@ -63,8 +63,6 @@ Here is the complete command set available via your Telegram bot interface:
 *   `/sysinfo` - Detailed device system, battery health/temperature, RAM, storage, and hardware report.
 *   `/vibrate [ms]` - Vibrates the device for the specified millisecond duration.
 *   `/sensor [type|list]` - Reads live hardware sensor data.
-*   `/toast <message>` - Shows a custom toast message on the device screen.
-*   `/pop_up <message>` - Displays an alert popup dialog on the device screen.
 *   `/reset_all` - Resets all configurations and temporary working data.
 
 ### 📁 File and Storage Management
@@ -83,7 +81,8 @@ Here is the complete command set available via your Telegram bot interface:
 *   `/apk <path>` - Silently or interactively installs the specified APK file via Shizuku.
 *   `/open_site <url>` - Opens a website link in the device browser.
 *   `/send_intent <action> [data] [pkg]` - Broadcasts custom Android Intents.
-
+*   `/toast <message>` - Shows a custom toast message on the device screen.
+*   `/popup <title>,<message>,<duration>` - Displays an alert popup dialog on the device screen.
 ### 📍 Media and Automation
 *   `/locate` - Gets instant GPS/Network coordinates and generates an active Google Maps link.
 *   `/screenshot` - Captures an instant high-resolution screenshot.
