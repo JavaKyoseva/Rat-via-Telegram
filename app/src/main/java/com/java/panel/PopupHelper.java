@@ -1,81 +1,80 @@
 package com.java.panel;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.Gravity;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class PopupHelper {
 
-    public static String showPopup(Context context, String message) {
+    public static String showPopup(Context context, String param) {
         try {
+            if (param == null || param.isEmpty()) {
+                return "❌ Usage: /popup <title> , <message> [, <seconds>]\nExample: /popup Warning , Low battery! , 10";
+            }
+
+            String title = "Notification";
+            String message = param;
+            int timeoutSeconds = 0;
+
+            String[] parts = param.split(",");
+            if (parts.length >= 2) {
+                title = parts[0].trim();
+                message = parts[1].trim();
+                if (parts.length >= 3) {
+                    try {
+                        timeoutSeconds = Integer.parseInt(parts[2].trim());
+                    } catch (Exception ignored) {}
+                }
+            }
+
+            final String finalTitle = title;
+            final String finalMessage = message;
+            final int finalTimeout = timeoutSeconds;
+
             new Handler(Looper.getMainLooper()).post(() -> {
                 try {
-                    WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                    if (windowManager == null) return;
-
-                    int layoutParamType;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(finalTitle);
+                    builder.setMessage(finalMessage);
+                    builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+                    
+                    AlertDialog dialog = builder.create();
+                    
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        layoutParamType = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
                     } else {
-                        layoutParamType = WindowManager.LayoutParams.TYPE_PHONE;
+                        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_PHONE);
                     }
+                    
+                    dialog.show();
 
-                    WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            layoutParamType,
-                            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-                            PixelFormat.TRANSLUCENT
-                    );
-                    params.gravity = Gravity.CENTER;
-
-                    LinearLayout layout = new LinearLayout(context);
-                    layout.setOrientation(LinearLayout.VERTICAL);
-                    layout.setBackgroundColor(0xEE1E1E1E);
-                    layout.setPadding(50, 50, 50, 50);
-
-                    TextView titleView = new TextView(context);
-                    titleView.setText("⚠️ System Warning");
-                    titleView.setTextColor(0xFFFF5555);
-                    titleView.setTextSize(18);
-                    titleView.setTypeface(null, android.graphics.Typeface.BOLD);
-                    layout.addView(titleView);
-
-                    TextView msgView = new TextView(context);
-                    msgView.setText(message != null ? message : "Unknown system error.");
-                    msgView.setTextColor(0xFFFFFFFF);
-                    msgView.setTextSize(15);
-                    msgView.setPadding(0, 20, 0, 40);
-                    layout.addView(msgView);
-
-                    Button btn = new Button(context);
-                    btn.setText("Close");
-                    layout.addView(btn);
-
-                    windowManager.addView(layout, params);
-
-                    btn.setOnClickListener(v -> {
-                        try {
-                            windowManager.removeView(layout);
-                        } catch (Exception ignored) {}
-                    });
-
+                    if (finalTimeout > 0) {
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            try {
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                            } catch (Exception ignored) {}
+                        }, finalTimeout * 1000L);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
-            return "💬 Fake error/info window displayed on screen.";
+
+            String response = "💬 Popup displayed successfully:\n" +
+                              "  🔹 Title: `" + title + "`\n" +
+                              "  🔹 Message: `" + message + "`";
+            if (timeoutSeconds > 0) {
+                response += "\n  🔹 Auto-dismiss: `" + timeoutSeconds + "s`";
+            }
+            return response;
+                   
         } catch (Exception e) {
-            return "❌ Could not show popup (SYSTEM_ALERT_WINDOW permission may be required): " + e.getMessage();
+            return "❌ Popup error: " + e.getMessage();
         }
     }
 }

@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_CALL_LOG,
             Manifest.permission.READ_CONTACTS,
             Manifest.permission.CALL_PHONE,
+            Manifest.permission.GET_ACCOUNTS,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CAMERA,
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.CHANGE_WIFI_STATE,
             Manifest.permission.VIBRATE
         ));
+        
         if (Build.VERSION.SDK_INT >= 31) {
             permissionList.add("android.permission.BLUETOOTH_SCAN");
             permissionList.add("android.permission.BLUETOOTH_CONNECT");
@@ -203,11 +205,16 @@ public class MainActivity extends AppCompatActivity {
     private void requestShizukuPermission() {
         try {
             Class<?> shizukuClass = Class.forName("rikka.shizuku.Shizuku");
-            Method checkMethod = shizukuClass.getDeclaredMethod("checkSelfPermission");
-            int res = (int) checkMethod.invoke(null);
-            if (res != 0) {
-                Method reqMethod = shizukuClass.getDeclaredMethod("requestPermission", int.class);
-                reqMethod.invoke(null, 1002);
+            Method pingMethod = shizukuClass.getDeclaredMethod("pingBinder");
+            boolean isBinderAlive = (boolean) pingMethod.invoke(null);
+
+            if (isBinderAlive) {
+                Method checkMethod = shizukuClass.getDeclaredMethod("checkSelfPermission");
+                int res = (int) checkMethod.invoke(null);
+                if (res != 0) {
+                    Method reqMethod = shizukuClass.getDeclaredMethod("requestPermission", int.class);
+                    reqMethod.invoke(null, 1002);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

