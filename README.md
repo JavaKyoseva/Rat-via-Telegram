@@ -70,7 +70,7 @@ Here is the complete command set available via your Telegram bot interface:
 *   `/data` - Lists the panel working directory (`TARGET_DIR`).
 *   `/download <path>` - Sends a file from the device directly to Telegram.
 *   `/upload` - Saves a file or photo to the device by sending it as a message to the bot.
-*   `/filexp [command]` - Advanced file manager infrastructure engine.
+*   `/filexp [list|delete|mkdir|info]` - Advanced file manager infrastructure engine.
 *   `/find <name>` - Searches for files and directories across storage.
 *   `/zip <path>` - Compresses a target folder into a ZIP archive.
 
