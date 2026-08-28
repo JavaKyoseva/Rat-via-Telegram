@@ -15,7 +15,7 @@
   ➤ /data - Lists the panel working directory (TARGET_DIR)
   ➤ /download <path> - Sends a file from the device to Telegram
   ➤ /upload - Saves a file/photo to the device by sending it to the bot
-  ➤ /filexp [command] - Advanced file manager infrastructure
+  ➤ /filexp [list|delete|mkdir|info] - Advanced file manager infrastructure
   ➤ /find <name> - Searches for files and directories on the device
   ➤ /zip <path> - Converts a folder into a zip archive
 
